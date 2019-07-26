@@ -36,7 +36,7 @@
     </div>
 
     <div class="block">
-      <el-pagination layout="total, sizes, prev, pager, next, jumper"
+      <el-pagination layout="total, prev, pager, next"
                      :total="paginationData.articalTotalCount"
                      :current-page="paginationData.currentPage"
                      :page-size="10"
@@ -201,6 +201,8 @@
     }
 </script>
 
+
+
 <style scoped>
   .common-content {
     width: 100%;
@@ -295,4 +297,19 @@
     /*background-color: aqua;*/
   }
 
+</style>
+
+<style>
+
+  .el-pagination .el-pager li{
+    color: #C0C4CC !important;
+  }
+
+  .el-pagination .el-pager li:hover{
+    color: #303133 !important;
+  }
+
+  .el-pagination .el-pager li.active{
+    color: black !important;
+  }
 </style>

@@ -1,8 +1,11 @@
 <template>
-  <div id="app">
-    <!--<img src="./assets/logo.png">-->
-    <router-view/>
-  </div>
+  <!--<el-scrollbar style="height: 100%">-->
+    <div id="app">
+      <!--<img src="./assets/logo.png">-->
+      <router-view/>
+    </div>
+  <!--</el-scrollbar>-->
+
 </template>
 
 <script>

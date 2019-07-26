@@ -1,79 +1,85 @@
 <template>
+
+
   <div class="home-content" v-bind:style="{height:windowHeight}">
-    <div class="left">
-      <div class="content-list">
-        <div class="emptyData" v-if="emptyData">暂无数据</div>
-        <ul>
-          <li v-for="item in datas" @click="clickContent(item)">
-            <h1>{{item.title}}</h1>
-            <p>{{item.content}}</p>
-          </li>
-        </ul>
+
+    <div class="emptyData" v-if="emptyData">暂无数据</div>
+    <vue-waterfall-easy :imgsArr="newsArr"
+                        @scrollReachBottom="getNewsData(index+1)"
+                        maxCols=4>
+      <div class="img-info" slot-scope="props">
+        <p class="some-info">{{props.value.info}}</p>
+        <p class="some-info">来源：{{props.value.media}}</p>
       </div>
-
-    </div>
-    <div class="right">
-
-
-
-    </div>
+    </vue-waterfall-easy>
 
   </div>
 
 </template>
 
 <script>
-  let listDatas = [
-    {
-      "module": [],
-      "category": [
-        "iOS"
-      ],
-      "_id": "5b9b4ff3c998ac2cc95deb49",
-      "title": "__has_feature详解",
-      "created_at": "2018-09-14",
-      "author": "Miridescent",
-      "content": "大致的意思是通过给定的值，判断编译器是否支持该特性\r\n类似的特性检测宏还有`__has_builtin`、`__has_attribute`等，他们都属于Feature Checking Macros",
-      "file_name": "__has_feature详解.md",
-      "__v": 0
-    },
-    {
-      "module": [],
-      "category": [
-        "iOS"
-      ],
-      "_id": "5b9b4ff3c998ac2cc95deb49",
-      "title": "__has_feature详解",
-      "created_at": "2018-09-14",
-      "author": "Miridescent",
-      "content": "大致的意思是通过给定的值，判断编译器是否支持该特性\r\n类似的特性检测宏还有`__has_builtin`、`__has_attribute`等，他们都属于Feature Checking Macros",
-      "file_name": "__has_feature详解.md",
-      "__v": 0
-    }
-  ]
 
-
+import vueWaterfallEasy from 'vue-waterfall-easy'
+import axios from 'axios'
 
       export default {
         name: "Home",
-      data(){
+        data(){
           return {
             windowHeight: window.innerHeight + 'px',
-            datas: listDatas
+            newsArr: [],
+            index:1
           }
-      },
+        },
+
+        components:{
+          vueWaterfallEasy
+        },
+
 
         computed: {
           emptyData() {
-            return this.datas.length>0?false:true;
+            // return this.newsArr.length>0?false:true;
+            return false
           }
         },
 
         methods: {
           clickContent:function (item) {
             console.log(item)
+          },
+
+          getNewsData:function(index, pageSize) {
+            axios.post('/news/list.json', {
+              index: index,
+              pageSize: pageSize
+            }).then(response=>{
+
+              let _this = this;
+              let result = response.data;
+              var arr = [];
+
+              let datas = result['data'];
+
+              console.log(_this.index);
+              console.log(datas);
+
+              for(let value in datas){
+                arr.push({src:datas[value]['image_url'], href:datas[value]['full_url'], info:datas[value]['title'], media:datas[value]['media']})
+              }
+
+              _this.newsArr = _this.newsArr.concat(arr);
+              _this.index = _this.index + 1
+            })
           }
-        }
+
+        },
+
+        created(){
+          this.getNewsData(1, 20);
+        },
+
+
 
     }
 
@@ -84,46 +90,25 @@
   .home-content {
     width: 100%;
     height: 100%;
+    margin-left: 20px;
     /*background-color: antiquewhite;*/
     margin-top: 54px;
-  }
 
-  .home-content .left{
-    width: 64%;
-    margin-top: 40px;
-    margin-left: 6%;
-    position: relative;
-    float: left;
-  }
-
-  .home-content .right {
-    width: 20%;
-    margin-top: 40px;
-    margin-left: 6%;
-    background-color: aliceblue;
-    float: left;
-  }
-
-  .content-list{
-    margin-left: 10%;
-  }
-
-  .content-list>ul>li{
-    margin-top: 30px;
-    cursor: pointer;
 
   }
 
-  .content-list>ul>li>h1{
+  vue-waterfall-easy{
+    overflow: hidden;
+  }
+
+  .some-info {
+    line-height: 1.8;
     text-align: left;
-
-  }
-
-  .content-list>ul>li>p{
+    margin-left: 20px;
+    margin-right: 20px;
     margin-top: 15px;
-    text-align: left;
-    color: #5e5e5e;
+    color: black;
 
   }
-
 </style>
+
