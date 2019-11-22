@@ -2,7 +2,8 @@
 
   <div class="artical-content" v-bind:style="{'min-height': windowHeight}">
     <h1>{{articalTitle}}</h1>
-    <div class="content" v-html="articalContent">
+    <!--<div class="content" v-html="articalContent">-->
+    <article class="markdown-body content" v-html="articalContent"></article>
     </div>
   </div>
 
@@ -13,7 +14,7 @@
 
   import axios from 'axios';
   import showdown from 'showdown';
-  import md from '../assets/solidity函数.md'
+  import 'github-markdown-css';
     export default {
         name: "ShowArtical",
       data() {
@@ -22,7 +23,8 @@
             windowHeight : window.innerHeight + 'px',
             articalContent : '',
             articalID : this.$route.params.id,
-            articalTitle: ''
+            articalTitle: '',
+            defaultData: "preview"
           }
 
       },
@@ -49,18 +51,14 @@
         //   this.articalContent = response.data.artical_content;
         // })
 
-        console.log('123123');
       },
 
       mounted(){
-
-          console.log('22222222');
-          console.log('articalID = ' + this.articalID);
         axios.post('/artical/find/by/id.json', {
           id: this.articalID
         }).then(response=>{
 
-          this.articalContent = response.data.artical_content;
+          this.articalContent = response.data.detail;
           this.articalTitle = response.data.title
         })
 
@@ -95,5 +93,4 @@
     top: 40px;
     position: relative;
   }
-
 </style>

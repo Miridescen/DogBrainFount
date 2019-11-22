@@ -17,6 +17,7 @@ export default {
 <style>
 
   @import "common/common.css";
+
 #app {
   position: absolute;
   box-sizing: border-box;
